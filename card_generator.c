@@ -2,6 +2,8 @@
 #include<stdlib.h>
 #include<string.h>
 FILE *fp,*tempfp;
+char allergies_arr[100][50];
+int allergies_count = 0;
 struct student
 {
     char name[50];
@@ -76,6 +78,101 @@ void remove_newline(char *str)
 {
     str[strcspn(str,"\n")]=0;
 }
+int unique_allergies(char allergy[50])
+{
+    for(int i=0;i<allergies_count;i++)
+    {
+        if(strcmp(allergies_arr[i],allergy)==0)
+        {
+            return 0; 
+        }
+    }
+    return 1; 
+}
+int valid_email(struct student s)
+{
+    int count=0,count1=0;
+    for(int i=0;s.mail_id[i]!='\0';i++)
+    {
+        if(s.mail_id[i]=='@')
+        {
+            count++;
+        }
+        if(s.mail_id[i]=='.')
+        {
+            count1++;
+        }
+        if(s.mail_id[i]=='@' && s.mail_id[i+1]=='.')
+        {
+            printf("Invalid email ID. Please include a domain after '@'.\n");
+            return 0;
+        }
+        if(s.mail_id[i]=='.' && s.mail_id[i+1]=='@')
+        {
+            printf("Invalid email ID. Please remove '.' before '@'.\n");
+            return 0;
+        }
+        if(s.mail_id[i]==' ')
+        {
+            printf("Invalid email ID. Please remove spaces.\n");
+            return 0;
+        }
+    }
+    if(count==0)
+    {
+        printf("Invalid email ID. Please include '@'.\n");
+        return 0;
+    }
+    else if(count>1)
+    {
+        printf("Invalid email ID. Please include only one '@'.\n");
+        return 0;
+    }
+    if(count1==0)
+    {
+        printf("Invalid email ID. Please include '.' after '@'.\n");
+        return 0;
+    }
+    count=0;
+    for(int i=0;s.mail_id[i]!='\0';i++)
+    {
+        if(s.mail_id[i]=='@')
+        {
+            break;
+        }
+        count++;
+    }
+    if(count==0)
+    {
+        printf("Invalid email ID. Please include a username before '@'.\n");
+        return 0;
+    }
+    return 1;
+}
+void export_card(struct student s)
+{
+    char filename[100];
+    sprintf(filename, "%s_card.txt", s.student_id);
+    FILE *card_fp = fopen(filename, "w");
+    if (card_fp == NULL) 
+    {
+        printf("Error creating student card file.\n");
+        return;
+    }
+    fprintf(card_fp, "--------------------------------\n");
+    fprintf(card_fp, "         STUDENT CARD           \n");
+    fprintf(card_fp, "--------------------------------\n");
+    fprintf(card_fp, "NAME           : %s\n", s.name);
+    fprintf(card_fp, "STUDENT ID     : %s\n", s.student_id);
+    fprintf(card_fp, "BLOOD GROUP    : %s\n", s.blood_group);
+    fprintf(card_fp, "ALLERGIES      : %s\n", s.allergies);
+    fprintf(card_fp, "MEDICAL ISSUE  : %s\n", s.medical_issue);
+    fprintf(card_fp, "MAIL_ID        : %s\n", s.mail_id);
+    fprintf(card_fp, "EMERGENCY PH.NO: 6308887742\n");
+    fprintf(card_fp, "--------------------------------\n");
+    fclose(card_fp);
+    printf("Student card generated successfully.\n");
+}
 void register_a_form()
 {
     struct student s;
@@ -101,6 +198,11 @@ void register_a_form()
     remove_newline(s.medical_issue);
     printf("enter your mail_id:");
     fgets(s.mail_id,sizeof(s.mail_id),stdin);
+    while(!valid_email(s)) 
+    {
+        printf("Please enter a valid email ID: ");
+        fgets(s.mail_id, sizeof(s.mail_id), stdin);
+    }
     remove_newline(s.mail_id);
     strcpy(check,s.mail_id);
     rewind(fp);
@@ -129,6 +231,14 @@ void register_a_form()
     printf("Your Student ID: %s\n", s.student_id);
     fprintf(fp, "%s,%s,%s,%s,%s,%s\n", s.name, s.student_id, s.blood_group, s.allergies, s.medical_issue, s.mail_id);
     printf("Data saved successfully.\n");
+    printf("Do you want to export your card? (1 for yes, 0 for no): ");
+    int a;
+    scanf("%d", &a);
+    getchar(); 
+    if(a==1)
+    {
+        export_card(s);
+    }
     free(generated_id); 
     fclose(fp);
 }
@@ -299,13 +409,158 @@ void forgot_student_id()
         printf("No matching record found for the provided name and email ID.\n");
     }
 }
+void make_a_group()
+{
+    char line[250];
+    int a;
+    struct student s;
+    char arr[][4]={"A+","A-","B+","B-","O+","O-","AB+","AB-"};
+    int arr1[8]={0};
+    int count=0,i=0,b;
+    printf("1.blood group\n");
+    printf("2.allergies\n");
+    printf("3.exit\n");
+    printf("Enter your choice:");
+    scanf("%d", &a);
+    getchar();
+    fp=fopen("data1.txt","r");
+    if(fp==NULL)
+    {
+        printf("file not found\n");
+        return;
+    }
+    if(a==1)
+    {
+        b=8;
+        while(b!=0)
+        {
+            while(fgets(line,sizeof(line),fp)!=NULL)
+            {
+                sscanf(line,"%[^,],%[^,],%[^,],%[^,],%[^,],%[^\n]",s.name,s.student_id,s.blood_group,s.allergies,s.medical_issue,s.mail_id);
+                remove_newline(s.blood_group);
+                if(strcmp(s.blood_group,arr[i])==0)
+                {
+                    count++;
+                }
+            }
+            arr1[i]=count;
+            count=0;
+            i++;
+            rewind(fp);
+            b--;
+        }
+        for(int j=0;j<8;j++)
+        {
+            printf("%s: %d\n", arr[j], arr1[j]);
+        }
+        printf("Do you want any blood group specificly? (1 for yes, 0 for no): ");
+        scanf("%d", &b);
+        getchar(); 
+        if(b==1)
+        {
+            for(i=0;i<8;i++)
+            {
+                printf("%d.%s\n",i+1,arr[i]);
+            }
+            printf("Enter your choice:");
+            scanf("%d", &i);
+            getchar();
+            while(fgets(line,sizeof(line),fp)!=NULL)
+            {
+                sscanf(line,"%[^,],%[^,],%[^,],%[^,],%[^,],%[^\n]",s.name,s.student_id,s.blood_group,s.allergies,s.medical_issue,s.mail_id);
+                remove_newline(s.blood_group);
+                if(strcmp(s.blood_group,arr[i-1])==0)
+                {
+                    printf("NAME           :%s\n",s.name);
+                    printf("STUDENT ID     :%s\n",s.student_id);
+                    printf("BLOOD GROUP    :%s\n",s.blood_group);
+                    printf("ALLERGIES      :%s\n",s.allergies);
+                    printf("MEDICAL ISSUE  :%s\n",s.medical_issue);
+                    printf("MAIL_ID        :%s\n",s.mail_id);
+                    printf("--------------------------------\n");
+                }
+            }
+        }
+    }
+    else if(a==2)
+    {
+        int count = 0,i=0;
+        char allergies_arr1[100];
+        rewind(fp);
+        while(fgets(line,sizeof(line),fp)!=NULL)
+        {
+            sscanf(line,"%[^,],%[^,],%[^,],%[^,],%[^,],%[^\n]",s.name,s.student_id,s.blood_group,s.allergies,s.medical_issue,s.mail_id);
+            remove_newline(s.allergies);
+            if(unique_allergies(s.allergies))
+            {
+                strcpy(allergies_arr[allergies_count++], s.allergies);
+            }
+        }
+        rewind(fp);
+        b=allergies_count;
+        while(b!=0)
+        {
+            while(fgets(line,sizeof(line),fp)!=NULL)
+            {
+                sscanf(line,"%[^,],%[^,],%[^,],%[^,],%[^,],%[^\n]",s.name,s.student_id,s.blood_group,s.allergies,s.medical_issue,s.mail_id);
+                remove_newline(s.allergies);
+                if(strcmp(s.allergies, allergies_arr[i])==0)
+                {
+                    count++;
+                }
+            }
+            allergies_arr1[i]=count;
+            count=0;
+            i++;
+            rewind(fp);
+            b--;
+        }
+        for(int j=0;j<allergies_count;j++)
+        {
+            printf("%s: %d\n", allergies_arr[j], allergies_arr1[j]);
+        }
+        printf("Do you want any allergies specificly? (1 for yes, 0 for no): ");
+        scanf("%d", &b);
+        getchar();
+        if(b==1)
+        {
+            for(i=0;i<allergies_count;i++)
+            {
+                printf("%d.%s\n",i+1,allergies_arr[i]);
+            }
+            printf("Enter your choice:");
+            scanf("%d", &i);
+            getchar();
+            while(fgets(line,sizeof(line),fp)!=NULL)
+            {
+                sscanf(line,"%[^,],%[^,],%[^,],%[^,],%[^,],%[^\n]",s.name,s.student_id,s.blood_group,s.allergies,s.medical_issue,s.mail_id);
+                remove_newline(s.allergies);
+                if(strcmp(s.allergies, allergies_arr[i-1])==0)
+                {
+                    printf("NAME           :%s\n",s.name);
+                    printf("STUDENT ID     :%s\n",s.student_id);
+                    printf("BLOOD GROUP    :%s\n",s.blood_group);
+                    printf("ALLERGIES      :%s\n",s.allergies);
+                    printf("MEDICAL ISSUE  :%s\n",s.medical_issue);
+                    printf("MAIL_ID        :%s\n",s.mail_id);
+                    printf("--------------------------------\n");
+                }
+            }
+        }
+    }
+    fclose(fp);
+
+}
 int main()
 {
     int a;
     char id[20];
     while(1)
     {
-        printf("login(1)/register(2)/exit(0):");
+        printf("1.login\n");
+        printf("2.register\n");
+        printf("3.exit\n");
+        printf("Enter your choice:");
         scanf("%d",&a);
         if(a==2)
         {
@@ -313,7 +568,10 @@ int main()
         }
         else if(a==1)
         {
-            printf("login as a staff(1)/student(2)/forgot student id(3):");
+            printf("1.login as a staff\n");
+            printf("2.student\n");
+            printf("3.forgot student id\n");
+            printf("Enter your choice:");
             scanf("%d",&a);
             getchar();
             if(a==2)
@@ -327,10 +585,25 @@ int main()
             {
                 if(password())
                 {
-                    printf("enter the student id:");
-                    fgets(id,sizeof(id),stdin);
-                    remove_newline(id);
-                    staff(id);
+                    printf("1.make a group\n");
+                    printf("2.Edit student details:\n");
+                    printf("Enter your choice:");
+                    scanf("%d",&a);
+                    if(a==1)
+                    {
+                        make_a_group();
+                    }
+                    else if(a==2)
+                    {
+                        printf("enter the student id:");
+                        fgets(id,sizeof(id),stdin);
+                        remove_newline(id);
+                        staff(id);
+                    }
+                    else
+                    {
+                        printf("Invalid choice.\n");
+                    }
                 }
             }
             else if(a==3)
