@@ -1,0 +1,21 @@
+------------EXPENES REPORT-----------
+
+Name:prasanth
+item:gee
+cost:180
+
+Name:praveen
+item:soap
+cost:37
+
+Total Expenses:217.000000
+Indivisual Epenses:108.500000
+
+prasanth:
+	Paid: ₹180.000000
+	To Receive: ₹71.500000
+
+praveen:
+	Paid: ₹37.000000
+	To Pay: ₹71.500000
+

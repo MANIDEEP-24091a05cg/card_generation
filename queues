@@ -1,0 +1,86 @@
+#include<stdio.h>
+#include<conio.h>
+#include<stdlib.h>
+int *array_queue;
+int front,rear,size;
+void display();
+void enque();
+void deque();
+void  main()
+{
+    front=-1;
+    rear=-1;
+    int i,option;
+    char choice;
+    printf("Enter the size :");
+    scanf("%d",&size);
+    array_queue=(int *)malloc(size *sizeof(int));
+    for(i=0;i<size;i++)
+    {
+        printf("enter the data :");
+        scanf("%d",&array_queue[i]);
+        front=0;
+        rear=rear+1;
+    }
+    do
+    {
+        printf("\nqueue using arrays ");
+        printf("\n1.enque\n2.deque\n3.display\n");
+        printf("\nEnter the option :");
+        scanf("%d",&option);
+        switch(option)
+        {
+            case 1 : enque();
+                     break;
+            case 2 : deque();
+                     break;
+            case 3 : display();
+                     break;
+            default: printf("INVALID OPTION");              
+        }
+        printf("\nIf you want to to continue then enter x (or) X");
+        scanf(" %c",&choice);
+    }
+    while(choice=='x'||choice=='X');
+    getch();
+}
+void enque()
+{
+    int size,i;
+    printf("Enter how many elements do u want to in insert :");
+    scanf("%d",&size);
+    for(i=0;i<size;i++)
+    {
+        rear++;
+        printf("enter the data :");
+        scanf("%d",&array_queue[rear]);
+    }
+    for(i=0;i<=rear;i++)
+    {
+        printf("[%d]",array_queue[i]);
+    }
+}
+void deque()
+{
+    int size,i,y;
+    printf("Enter how many do u want to deque :");
+    scanf("%d",&size);
+    for(i=0;i<size;i++)
+    {
+        y=array_queue[front];
+        front++;
+    }
+    while(front<=rear)
+    {
+        printf("[%d]",array_queue[front]);
+        front++;
+    }
+}
+void display()
+{
+    int  i;
+    for(i=0;i<=rear;i++)
+    {
+        printf("[%d]",array_queue[i]);
+    }
+}

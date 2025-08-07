@@ -1,0 +1,8 @@
+Room clash:
+ A1 (ABC , MANI) 
+ A1 (BAC , MANIDEEP)
+--------------------------------
+Room clash:
+ 100 (ENGLISH , SAI) 
+ 100 (MATHS , SASI)
+--------------------------------

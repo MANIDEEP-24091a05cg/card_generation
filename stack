@@ -1,0 +1,84 @@
+#include<stdio.h>
+#include<conio.h>
+#include<stdlib.h>
+struct node
+{
+  int data;
+  struct node *next;
+};
+struct node *top=NULL,*newnode,*temp;
+void create_list(int data);
+void display();
+void push (int data);
+void pop();
+void create_list(int data)
+{
+        newnode=(struct node*)malloc(sizeof(struct node));
+        newnode->data=data;
+        newnode->next=top;
+        top=newnode;   
+}
+void display()
+{
+    struct node *temp=top;
+    while(temp!=NULL)
+    {
+        printf("%d->",temp->data);
+        temp=temp->next;   
+    }
+    printf("NULL");
+}
+void push(int data)
+{
+    int data;
+    newnode=(struct node*)malloc(sizeof(struct node));
+    printf("\nEnter the data : ");
+    scanf("%d",&data);
+       newnode->data=data;
+        newnode->next=top;
+        top=newnode;
+        display();
+}
+void pop()
+{
+    struct node *delete;
+    delete=top;
+    top=top->next;
+    free(delete);
+    display();
+}
+
+int main()
+{
+    int data,size,i,option;
+    char choice;
+    printf("Enter the size :");
+    scanf("%d",&size);
+    for(i=1;i<=size;i++)
+    {
+        printf("Enter the data : ");
+        scanf("%d",&data);
+        create_list(data);
+    }
+    do
+    {
+      printf("\nStack linked list ");
+      printf("1.dispaly\n2.push\n3.pop");
+      printf("Enter the option :");
+      scanf("%d",&option);
+      switch(option)
+      {
+        case 1 : display();
+                 break;
+        case 2 : push(data);
+                 break;
+        case 3 : pop();
+                 break;         
+        default : printf("ERROR");         
+      }
+      printf("enter the x");
+      scanf(" %c",&choice);
+    } while (choice=='x'||choice=='X');
+    getch();
+    return 0;
+}    

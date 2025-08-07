@@ -204,15 +204,12 @@ void register_a_form()
         printf("file not found");
         return;
     }
-    printf("enter your full name:");
     getchar();
+    printf("enter your full name:");
     fgets(s.name,sizeof(s.name),stdin);
     remove_newline(s.name);
     printf("enter your date of birth (DD/MM/YYYY): ");
     fgets(s.dob, sizeof(s.dob), stdin);
-    _flushall();
-    printf("%s ",s.dob);
-    printf("%d",sizeof(s.dob));
     remove_newline(s.dob);
     s.age = calculate_age(s.dob);
     printf("enter your blood_group:");
@@ -220,19 +217,16 @@ void register_a_form()
     remove_newline(s.blood_group);
     printf("enter your allergies:");
     fgets(s.allergies,sizeof(s.allergies),stdin);
-    _flushall();
     remove_newline(s.allergies);
     printf("enter your medical_issue:");
     fgets(s.medical_issue,sizeof(s.medical_issue),stdin);
     remove_newline(s.medical_issue);
     printf("enter your mail_id:");
     fgets(s.mail_id,sizeof(s.mail_id),stdin);
-    remove_newline(s.mail_id);
     while(!valid_email(s)) 
     {
         printf("Please enter a valid email ID: ");
         fgets(s.mail_id, sizeof(s.mail_id), stdin);
-        remove_newline(s.mail_id);
     }
     remove_newline(s.mail_id);
     strcpy(check,s.mail_id);

@@ -1,0 +1,11 @@
+--------------------------------
+         STUDENT CARD           
+--------------------------------
+NAME           : Teja
+STUDENT ID     : 2025AB030
+BLOOD GROUP    : B-
+ALLERGIES      : skin
+MEDICAL ISSUE  : none
+MAIL_ID        : Teja@gmail.com
+EMERGENCY PH.NO: 6308887742
+--------------------------------
